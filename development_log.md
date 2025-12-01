@@ -47,5 +47,11 @@ Adjust budget_system.budget_system里面 add_member function，防止记录存�
 
 12/01 周二递交ddl，bug基本修完了，这个文件递交前记得删掉
 
+
 2025-12-01 刚才不小心动了，可能merge时候member会有冲突，到时候keep我这一版吧，其实不管keep那一版应该问题都不大
 还有你们不要改我这个branch，自己创一个branch去
+12/01 今天就是为了merge，来搞一下，不为别的，现在我在修改branch的内容
+
+
+12/01 今天rachel就是为了merge，来搞一下，不为别的，现在我在修改branch的内容
+
