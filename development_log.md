@@ -55,3 +55,5 @@ Adjust budget_system.budget_system里面 add_member function，防止记录存�
 
 12/01 今天rachel就是为了merge，来搞一下，不为别的，现在我在修改branch的内容
 
+12/03 上午10:31
+
