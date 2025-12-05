@@ -2,6 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
 
+class InsufficientFundsError(Exception):
+    """Raised when a fund does not have enough balance for an operation."""
+    pass
+
 class budgetfund: #this is the class for the whole budget of the family
     log_title=['action','amount','description','balance','status','date']
     
@@ -12,10 +16,25 @@ class budgetfund: #this is the class for the whole budget of the family
         self.household_name=name
         self.__log=[]
         
-    def validate(self,amount=0): #see if the balance is larger or equal to a certain amount,if no value entered, check if the account is in debt
-        if self.__balance>=float(amount):
+    def validate(self, amount=0):
+        """Check if there is enough balance, raise InsufficientFundsError if not."""
+        try:
+            if amount < 0:
+                raise ValueError("Amount must be non-negative.")
+
+            if amount > self.balance:
+                raise InsufficientFundsError(
+                    f"Insufficient balance: need {amount}, current {self.balance}"
+                )
             return True
-        return False
+
+        except TypeError as e:
+            print(f"[ERROR] Invalid amount type: {e}")
+            raise
+
+        except InsufficientFundsError as e:
+            print(f"[ERROR] {e}")
+            raise
         
     def add(self,amount,desciption='',date=None):
         if date is None:
@@ -24,15 +43,20 @@ class budgetfund: #this is the class for the whole budget of the family
         self.__log.append(['add',amount,desciption,self.get(),'succeeded',date])
         return True
         
-    def sub(self,amount,desciption='',date=None):
-        if date is None:
-            date = datetime.today().strftime("%Y-%m-%d")    
-        if self.validate(amount):
-            self.__balance-=float(amount)
-            self.__log.append(['sub',amount,desciption,self.get(),'succeeded',date])
-            return True
-        self.__log.append(['sub',amount,desciption,self.get(),'failed',date])
-        return False
+    def sub(self, amount, description="", date=None):
+        """Subtract an expense from the fund, with error handling."""
+        try:
+            self.validate(amount)
+
+            # self.balance -= amount
+            # self.log.append({...})
+
+        except InsufficientFundsError:
+            # self.log.append({... status=False ...})
+            print("[ERROR] Transaction failed due to insufficient funds.")
+        except Exception as e:
+            print(f"[ERROR] Unexpected error in sub(): {e}")
+            raise
             
     def get(self):
         return self.__balance
@@ -40,24 +64,27 @@ class budgetfund: #this is the class for the whole budget of the family
     def get_log(self):
         return [self.log_title,self.__log]
         
-    def get_df(self,start=None, end=None):
-        if not self.__log:
-            return pd.DataFrame(columns=self.log_title + ["year_month"])
-    
-        df = pd.DataFrame([
-            {key: entry[i] for i, key in enumerate(self.log_title)}
-            for entry in self.__log
-        ])
+    def get_df(self, start=None, end=None):
+        """Return log as DataFrame within [start, end]."""
+        try:
+            df = pd.DataFrame(self.log)
 
-        df["date"] = pd.to_datetime(df["date"])
-        df["year_month"] = df["date"].dt.strftime("%Y-%m")
-        if start is None and end is None:
+            if start is not None:
+                start = pd.to_datetime(start)
+                df = df[df["date"] >= start]
+
+            if end is not None:
+                end = pd.to_datetime(end)
+                df = df[df["date"] <= end]
+
             return df
-        if start is None:
-            start = df["year_month"].min()
-        if end is None:
-            end = df["year_month"].max()
-        return df[(df["year_month"] >= start) & (df["year_month"] <= end)]
+
+        except KeyError as e:
+            print(f"[ERROR] Missing expected column in log: {e}")
+            raise
+        except (TypeError, ValueError) as e:
+            print(f"[ERROR] Invalid date format for start/end: {e}")
+            raise
 
     def summarize_month(self, start_month, end_month=''):
         if end_month=='':

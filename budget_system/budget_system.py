@@ -41,10 +41,12 @@ class BudgetSystem:
             print(person)
 
     def get_member(self, ID):
-        for person in self.members:
-            if person.ID == ID:
-                return person
-        return None
+        """Get member by ID, raise KeyError if not found."""
+        try:
+            return self.members[ID]
+        except KeyError:
+            print(f"[ERROR] Member with ID {ID} not found.")
+            raise
 
     def upgrade_member(self, ID):
         person = self.get_member(ID)
