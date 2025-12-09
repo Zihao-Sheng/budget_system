@@ -1,6 +1,5 @@
 name: Python Package CI
 
-##begin workflow
 on:
   push:
     branches: [ main ]
@@ -17,17 +16,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
+      - name: Install package and dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas matplotlib ipython jinja2
+          pip install -e .
 
       - name: Run unit tests
         run: |
