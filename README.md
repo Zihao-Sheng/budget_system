@@ -1,4 +1,4 @@
-Please see the link for the published package: `https://test.pypi.org/project/budget-system-ubco-1.0.0-2025/1.0.0/`
+Please see the link for the published package: `[https://test.pypi.org/project/budget-system-ubco-1.0.0-2025/1.0.0/](https://pypi.org/project/budget-system-ubco-2025/1.0.0/)`
 
 # 🧾 1. Subpackage: `member`
 
