@@ -57,7 +57,6 @@ class budgetfund:  # this is the class for the whole budget of the family
             raise
 
 
-    # ---------- 2. add：正常加钱 + 记一条 succeeded 记录 ----------
     def add(self, amount, desciption='', date=None):
         if date is None:
             date = datetime.today().strftime("%Y-%m-%d")
@@ -66,7 +65,6 @@ class budgetfund:  # this is the class for the whole budget of the family
         self.__log.append(['add', amount, desciption, self.get(), 'succeeded', date])
         return True
 
-    # ---------- 3. sub：带异常处理、成功/失败都写 log ----------
     def sub(self, amount, description="", date=None):
         """Subtract an expense from the fund, with error handling."""
         if date is None:
@@ -89,7 +87,6 @@ class budgetfund:  # this is the class for the whole budget of the family
             raise
 
 
-    # ---------- 4. 一些 getter ----------
     def get(self):
         return self.__balance
 
@@ -98,27 +95,21 @@ class budgetfund:  # this is the class for the whole budget of the family
         Return log as DataFrame within [start, end], always with 'year_month' column.
 
         start, end:
-            - None: 不限制
-            - "YYYY-MM" 或 "YYYY-MM-DD" 都可以。我们会按“整月”范围来筛选。
+            - None
+            - "YYYY-MM" 或 "YYYY-MM-DD"
         """
         try:
-            # 用完整列名构建 DataFrame
             df = pd.DataFrame(self.__log, columns=self.log_title)
 
-            # 空表：也要带上 year_month 列
             if df.empty:
                 df["year_month"] = pd.Series(dtype="object")
                 return df
 
-            # 转 datetime
             df["date"] = pd.to_datetime(df["date"])
 
-            # 先算 year_month，后面测试要用
             df["year_month"] = df["date"].dt.to_period("M").astype(str)  # e.g. "2025-01"
 
-            # 如果提供了 start / end，就按“月区间”筛选
             if start is not None:
-                # 不管传 "2025-01" 还是 "2025-01-15"，都转成对应的月份
                 p_start = pd.Period(start, freq="M")
                 start_ts = p_start.to_timestamp(how="start")
                 df = df[df["date"] >= start_ts]
@@ -138,7 +129,6 @@ class budgetfund:  # this is the class for the whole budget of the family
             raise
 
 
-    # ---------- 6. summarize_month 保持逻辑，用修好的 get_df ----------
     def summarize_month(self, start_month, end_month=''):
         if end_month == '':
             end_month = start_month
