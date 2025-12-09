@@ -4,7 +4,7 @@ from datetime import datetime
 
 class InsufficientFundsError(Exception):
     """Raised when a fund does not have enough balance for an operation."""
-    pass
+    print('Not enough fund')
 
 
 class budgetfund:  # this is the class for the whole budget of the family

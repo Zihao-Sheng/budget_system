@@ -24,3 +24,4 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+>>>>>>> bdf59e2c8cecf3a7e710d1cf47ad92a44746c0f3
