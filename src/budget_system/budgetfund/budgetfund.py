@@ -14,9 +14,8 @@ class budgetfund:  # this is the class for the whole budget of the family
         self.opening_balance = float(opening_balance)
         self.__balance = float(opening_balance)
         self.household_name = name
-        self.__log = []   # 每条记录: [action, amount, description, balance, status, date]
+        self.__log = []   # [action, amount, description, balance, status, date]
 
-    # ---------- 1. 带异常处理的校验 ----------
     def get_log(self):
         """Return raw log structure: [title_list, list_of_records]."""
         return [self.log_title, self.__log]
@@ -41,16 +40,13 @@ class budgetfund:  # this is the class for the whole budget of the family
             amount = float(amount)
 
             if amount < 0:
-                # 这个是明显的参数错误，直接抛没问题
                 raise ValueError("Amount must be non-negative.")
 
             if amount > self.__balance:
                 msg = f"Insufficient balance: need {amount}, current {self.__balance}"
                 if raise_error:
-                    # 给内部（例如 sub）使用：触发自定义异常
                     raise InsufficientFundsError(msg)
                 else:
-                    # 给外部 / tests 使用：返回 False
                     print(f"[ERROR] {msg}")
                     return False
 
