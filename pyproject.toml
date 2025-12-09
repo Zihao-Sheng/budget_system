@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "budget_system_ubco_1.0.0_2025"
+name = "budget_system_ubco_2025"
 version = "1.0.0"
 description = "A household financial management toolkit created by UBCO students for DATA542 course."
 readme = "README.md"
