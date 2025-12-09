@@ -9,8 +9,8 @@ description = "A household financial management toolkit created by UBCO students
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
-  { name = "Zihao Sheng", email = "1844716292@qq.com" }
-  { name = "Wei Li", email = "yhszhdw@163.com" }
+  { name = "Zihao Sheng", email = "1844716292@qq.com" },
+  { name = "Wei Li", email = "yhszhdw@163.com" },
   { name = "Binzheng Jin", email = "jedmond166666@163.com" }
 ]
 requires-python = ">=3.9"
@@ -18,7 +18,7 @@ requires-python = ">=3.9"
 dependencies = [
   "pandas>=2.0",
   "matplotlib>=3.8",
-  "jinja2>=3.1",
+  "jinja2>=3.1"
 ]
 
 [tool.setuptools.packages.find]
