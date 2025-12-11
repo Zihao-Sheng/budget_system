@@ -59,7 +59,6 @@ class Asset:
 
     @current_value.setter
     def current_value(self, new_value: float):
-        try:
         # Convert to float (handles strings like "100.5")
             new_value = float(new_value)
 
@@ -68,11 +67,6 @@ class Asset:
 
             self._current_value = new_value
             self.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        except (TypeError, ValueError) as e:
-        # Provide a user-friendly message and re-raise for tests & logging
-            print(f"[ERROR] Invalid value for current_value(): {e}")
-            raise
 
     # export
     def to_dict(self) -> Dict[str, Any]:
@@ -136,13 +130,9 @@ class PropertyRegistry:
             print(f"Error: asset ID {asset_id} not found.")
             return False
 
-        try:
             asset.current_value = new_value
             print(f"Value updated: {asset_id} → {new_value}")
             return True
-        except ValueError as e:
-            print(f"Update failed: {e}")
-            return False
 
     # ----- export & filter -----
     def filter_assets(self,asset_type: Optional[str] = None,owner: Optional[str] = None) -> pd.DataFrame:
