@@ -2,9 +2,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-class InsufficientFundsError(Exception):
-    """Raised when a fund does not have enough balance for an operation."""
-    print('Not enough fund')
 
 
 class budgetfund:  # this is the class for the whole budget of the family
@@ -36,25 +33,7 @@ class budgetfund:  # this is the class for the whole budget of the family
         bool
             True if validation passes, False otherwise (when raise_error=False).
         """
-        try:
-            amount = float(amount)
 
-            if amount < 0:
-                raise ValueError("Amount must be non-negative.")
-
-            if amount > self.__balance:
-                msg = f"Insufficient balance: need {amount}, current {self.__balance}"
-                if raise_error:
-                    raise InsufficientFundsError(msg)
-                else:
-                    print(f"[ERROR] {msg}")
-                    return False
-
-            return True
-
-        except TypeError as e:
-            print(f"[ERROR] Invalid amount type: {e}")
-            raise
 
 
     def add(self, amount, desciption='', date=None):
@@ -69,7 +48,6 @@ class budgetfund:  # this is the class for the whole budget of the family
         """Subtract an expense from the fund, with error handling."""
         if date is None:
             date = datetime.today().strftime("%Y-%m-%d")
-        try:
             self.validate(amount, raise_error=True)
 
             amount = float(amount)
@@ -77,14 +55,6 @@ class budgetfund:  # this is the class for the whole budget of the family
             self.__log.append(['sub', amount, description, self.get(), 'succeeded', date])
             return True
 
-        except InsufficientFundsError:
-            self.__log.append(['sub', float(amount), description, self.get(), 'failed', date])
-            print("[ERROR] Transaction failed due to insufficient funds.")
-            return False
-
-        except Exception as e:
-            print(f"[ERROR] Unexpected error in sub(): {e}")
-            raise
 
 
     def get(self):
@@ -98,12 +68,6 @@ class budgetfund:  # this is the class for the whole budget of the family
             - None
             - "YYYY-MM" 或 "YYYY-MM-DD"
         """
-        try:
-            df = pd.DataFrame(self.__log, columns=self.log_title)
-
-            if df.empty:
-                df["year_month"] = pd.Series(dtype="object")
-                return df
 
             df["date"] = pd.to_datetime(df["date"])
 
@@ -121,12 +85,6 @@ class budgetfund:  # this is the class for the whole budget of the family
 
             return df
 
-        except KeyError as e:
-            print(f"[ERROR] Missing expected column in log: {e}")
-            raise
-        except (TypeError, ValueError) as e:
-            print(f"[ERROR] Invalid date format for start/end: {e}")
-            raise
 
 
     def summarize_month(self, start_month, end_month=''):
